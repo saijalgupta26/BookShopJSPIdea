@@ -65,8 +65,6 @@ public class UserServlet extends HttpServlet {
                 request.setAttribute("users", users1);
                 RequestDispatcher dispatcher2 = request.getRequestDispatcher("welcome.jsp");
                 dispatcher2.include(request, response);
-//			PrintWriter writer1 = response.getWriter();
-//			writer1.println("<html><body>Contact to admin session</body></html>");
                 break;
 
             }
@@ -115,6 +113,7 @@ public class UserServlet extends HttpServlet {
                 PrintWriter writer = response.getWriter();
                 System.out.println(isAdmin);
 
+
                 break;
             }
             case "login": {
@@ -136,21 +135,9 @@ public class UserServlet extends HttpServlet {
                         RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
                         dispatcher.include(request, response);
 
-
-
-//                        List<Book> books = bookService.findAllBook();
-//                        request.setAttribute("books", books);
-//                        RequestDispatcher dispatcher = request.getRequestDispatcher("book.jsp");
-//                        dispatcher.include(request, response);
                     } else {
-//					System.out.println("this is for admin purpose");
-
-//                        request.setAttribute("userData", user1);
-//                        List<User> users = UserService.findAll();
-//                        //request.setAttribute("users", users);
-//                        request.setAttribute("users", users);
-//                        RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
-//                        dispatcher.include(request, response);
+//
+//                       //for admin
                         HttpSession session =  request.getSession();
                         session.setAttribute("userData", user1);
 
@@ -179,49 +166,26 @@ public class UserServlet extends HttpServlet {
                 User user2 = new User(username2, null, completeName2, email2, null, null, null);
                 System.out.println("inside controller " + username2 + ", " + user2.getUsername());
                 userService.update(user2);
-                List<User> users = userService.findAll();
-                request.setAttribute("users", users);
-//                List<User> users1 = userService.findAll();
-//                request.setAttribute("users", users1);
+
+
+                HttpSession session =  request.getSession();
+
+                session.setAttribute("userData", user3);
+
+                List<User> users = UserService.findAll();
+                //request.setAttribute("users", users);
+                session.setAttribute("users", users);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
                 dispatcher.include(request, response);
             }
-            case "insert":{
-                String name=request.getParameter("BookName");
-                int id1=Integer.parseInt(request.getParameter("BookId"));
-                String author=request.getParameter("aName");
-                String publication=request.getParameter("pub");
-                Book book1 = new Book(name,id1,author,publication);
-                bookService.insert(book1);
-                PrintWriter writer1 = response.getWriter();
-                writer1.println("<html><body>Thanks for entering with us...</body></html>");
+
+            case "search":
+            {
+                System.out.println("enter your name");
+                String name=request.getParameter("user");
+
+
             }
         }
     }
 }
-//protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//
-//
-//
-//
-//System.out.println("inside post of FirstServlet and I am updating....");
-//
-//String username = request.getParameter("username");
-//String password = request.getParameter("password");
-//String completeName = request.getParameter("cName");
-//String email = request.getParameter("email");
-//
-//System.out.println(username + ", " + password + ", " + completeName + ", " + email);
-//
-//User user = new User(username, password, completeName, email);
-//
-////UserRepository com.bookshop.repository = new UserRepository();
-////com.bookshop.repository.save(user);
-//
-//service.register(user);
-//
-//PrintWriter writer = response.getWriter();
-//
-//writer.println("<html><body>Thanks for Registering with us...</body></html>");
-//}
-
