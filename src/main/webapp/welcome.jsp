@@ -84,7 +84,7 @@
 
   </tbody>
 </table>
-<form action="user?action=insert" method="post">
+<form action="book?action=insert" method="post">
   <label>BookName</label>
   <input type="text" name="BookName"><br><br>
   <label>BookId</label>

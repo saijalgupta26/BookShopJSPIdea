@@ -10,8 +10,8 @@
 <body>
 
 <%
-  User updatingUser = (User) request.getAttribute("updatingUser");
-  User loggedIn = (User) request.getAttribute("userData");
+  User updatingUser = (User) session.getAttribute("updatingUser");
+  User loggedIn = (User) session.getAttribute("userData");
 %>
 
 <h1>Update your details here</h1>

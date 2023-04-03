@@ -31,20 +31,15 @@ public class UserServlet extends HttpServlet {
         User user = userService.findUserByUsername(loggedInUser);
         request.setAttribute("userData", user);
 
+        HttpSession session = request.getSession(false);
+        RequestDispatcher dispatcher = null;
+
         switch (action) {
             case "delete":
-//                System.out.println("inside delete " + username + ", " + loggedInUser);
-//                HttpSession session = request.getSession(false);
-//                userService.delete(username);
-//                List<User> users = userService.findAll();
-//                request.setAttribute("users", users);
-//                RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
-//                dispatcher.include(request, response);
-//                break;
-                HttpSession session = request.getSession(false);
-                RequestDispatcher dispatcher = null;
+
                 if( session != null) {
                     userService.delete(username);
+                    System.out.println("delete");
                     List<User> users = userService.findAll();
                     session.setAttribute("users", users);
                     dispatcher = request.getRequestDispatcher("welcome.jsp");
@@ -76,28 +71,34 @@ public class UserServlet extends HttpServlet {
 
 
             case "update":
+                if(session!=null)
+                {
+                    System.out.println("inside update " + username + ", " + loggedInUser);
+//                    String updatingUser= (String) session.getAttribute("username");
+                    String updatingUser= (String) session.getAttribute(username);
+                    System.out.println(updatingUser);
+                    System.out.println(username);
+                    User user1 = userService.findUserByUsername(username);
+                    session.setAttribute("updatingUser", user1);
+                    String loggedInUser1 = (String) session.getAttribute("loggedIn");
+                    User user4 = userService.findUserByUsername(loggedInUser);
+                   session.setAttribute("userData", user4);
+                  dispatcher = request.getRequestDispatcher("update-user.jsp");
+                    dispatcher.include(request, response);
+                    break;
+                }
+                else{
+                    dispatcher = request.getRequestDispatcher("index.jsp");
+                    dispatcher.include(request, response);
 
-                System.out.println("inside update " + username + ", " + loggedInUser);
-
-                String updatingUser = request.getParameter("username");
-
-                User user1 = userService.findUserByUsername(updatingUser);
-
-                request.setAttribute("updatingUser", user1);
-
-                String loggedInUser1 = request.getParameter("loggedIn");
-
-                User user4 = userService.findUserByUsername(loggedInUser);
-                request.setAttribute("userData", user4);
-
-                RequestDispatcher dispatcher1 = request.getRequestDispatcher("update-user.jsp");
-                dispatcher1.include(request, response);
-                break;
+                }
         }
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
+        HttpSession session = request.getSession(false);
+        RequestDispatcher dispatcher = null;
         switch (action) {
             case "register":
             {
@@ -126,29 +127,26 @@ public class UserServlet extends HttpServlet {
                 if (user1 != null) {
                     if (user1.getisAdmin() == null) {
                         //request.setAttribute("bookData",book2);
-                        HttpSession session =  request.getSession();
-
 
                         List<Book> books = bookService.findAllBook();
                         //request.setAttribute("users", users);
                         session.setAttribute("books",books);
-                        RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
+                       dispatcher = request.getRequestDispatcher("book.jsp");
                         dispatcher.include(request, response);
-
                     } else {
 //
 //                       //for admin
-                        HttpSession session =  request.getSession();
+
                         session.setAttribute("userData", user1);
 
                         List<User> users = UserService.findAll();
                         //request.setAttribute("users", users);
                         session.setAttribute("users", users);
-                        RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
+                        dispatcher = request.getRequestDispatcher("welcome.jsp");
                         dispatcher.include(request, response);
                     }
                 } else {
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+                   dispatcher = request.getRequestDispatcher("index.jsp");
                     request.setAttribute("errorMessage", "Wrong Credentials, please try again!!");
                     dispatcher.forward(request, response);
                 }
@@ -156,27 +154,35 @@ public class UserServlet extends HttpServlet {
 
             }
             case "update": {
-                String username2 = request.getParameter("username");
-                String completeName2 = request.getParameter("cName");
-                String email2 = request.getParameter("email");
-                String loggedInUser = request.getParameter("loggedIn");
-                System.out.println(completeName2 + ", " + email2);
-                User user3 = userService.findUserByUsername(loggedInUser);
-                request.setAttribute("userData", user3);
-                User user2 = new User(username2, null, completeName2, email2, null, null, null);
-                System.out.println("inside controller " + username2 + ", " + user2.getUsername());
-                userService.update(user2);
+                if(session!=null)
+                {
+                    String username2 = request.getParameter("username");
+                    String completeName2 = request.getParameter("cName");
+                    String email2 = request.getParameter("email");
+                    String loggedInUser = request.getParameter("loggedIn");
+                    System.out.println(completeName2 + ", " + email2);
+                    User user3 = userService.findUserByUsername(loggedInUser);
+                    request.setAttribute("userData", user3);
+                    User user2 = new User(username2, null, completeName2, email2, null, null, null);
+                    System.out.println("inside controller " + username2 + ", " + user2.getUsername());
+                    userService.update(user2);
+                    session.setAttribute("userData", user3);
+
+                    List<User> users = UserService.findAll();
+                    //request.setAttribute("users", users);
+                    session.setAttribute("users", users);
+                    dispatcher = request.getRequestDispatcher("welcome.jsp");
+                    dispatcher.include(request, response);
+
+                }
+                else {
+                    dispatcher = request.getRequestDispatcher("index.jsp");
+                    dispatcher.include(request, response);
 
 
-                HttpSession session =  request.getSession();
+                }
 
-                session.setAttribute("userData", user3);
 
-                List<User> users = UserService.findAll();
-                //request.setAttribute("users", users);
-                session.setAttribute("users", users);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
-                dispatcher.include(request, response);
             }
 
             case "search":
@@ -186,6 +192,8 @@ public class UserServlet extends HttpServlet {
 
 
             }
+
+            //sigtnout
         }
     }
 }

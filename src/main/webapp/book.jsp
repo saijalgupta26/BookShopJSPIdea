@@ -17,7 +17,7 @@
 <body>
 <%
   //Book book = (Book)request.getAttribute("bookData");
-  List<Book> books = (List<Book>) request.getAttribute("books");
+  List<Book> books = (List<Book>) session.getAttribute("books");
 %>
 
 <table class="table">
@@ -42,8 +42,9 @@
     <td><%= books.get(i).getId() %></td>
     <td><%= books.get(i).getAuthor()%></td>
     <td><%= books.get(i).getPublication()%></td>
-    <td><a href="user?action=delete&username=<%= books.get(i).getname()%>">delete</a></td>
-    <td><a href="user?action=update&username=<%= books.get(i).getname()%> %>">update</a></td>
+    <td><a href="${pageContext.request.contextPath}/book?action=delete&bookName=<%=books.get(i).getname()%>">delete</a></td>
+    <td><a href="${pageContext.request.contextPath}/book?action=update&bookName=<%=books.get(i).getname()%>">update</a></td>
+
 
   </tr>
   <%} %>

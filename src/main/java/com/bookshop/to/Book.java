@@ -23,7 +23,7 @@ public class Book {
     public void setAuthor(String author) {
         this.author = author;
     }
-    public void setname(String name) {
+    public void setName(String name) {
         this.name = name;
     }
     public int getId() {
@@ -32,7 +32,7 @@ public class Book {
     public void setPublication(String publication) {
         this.publication = publication;
     }
-    public String getname() {
+    public String getName() {
         return name;
     }
 
